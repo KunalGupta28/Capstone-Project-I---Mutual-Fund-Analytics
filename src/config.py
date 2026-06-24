@@ -15,8 +15,11 @@ DASHBOARD_DIR = BASE_DIR / "dashboard"
 SOURCE_DATASETS_DIR = BASE_DIR / "data_sets"
 
 # Target schemes for Live NAV Ingestion
+HDFC_NAV_TARGET = {
+    "125497": "HDFC_Top_100_Direct"
+}
+
 LIVE_NAV_TARGETS = {
-    "125497": "HDFC_Top_100_Direct",
     "119551": "SBI_Bluechip",
     "120503": "ICICI_Bluechip",
     "118632": "Nippon_Large_Cap",

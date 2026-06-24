@@ -1,90 +1,130 @@
-# Bluestock Fintech Mutual Fund Analytics Platform
+# Bluestock Fintech — Mutual Fund Analytics Platform
 
-An industry-grade, end-to-end data engineering and analytics platform built for the **Bluestock Fintech Mutual Fund Analytics Platform Capstone Project**.
+An industry-grade, end-to-end data engineering and analytics platform built for the **Bluestock Fintech Capstone Project**.
 
 ---
 
 ## Project Objectives & Architecture
-This platform implements an **Extract-Transform-Load (ETL)** pipeline that consolidates fragmented mutual fund data, loads it into a normalized SQLite database star schema, calculates risk-adjusted return metrics, and provides an interactive analytical dashboard.
+
+This platform implements an **Extract → Transform → Load → Analyze → Visualize** pipeline that consolidates fragmented mutual fund data, loads it into a normalized SQLite star-schema database, calculates risk-adjusted return metrics, and provides an interactive analytical dashboard.
 
 ```
-Extract (APIs, CSVs) ──> Transform (Pandas) ──> Load (SQLite) ──> Analyze (EDA & Risk) ──> Visualize (Power BI)
+Extract (APIs + CSVs) → Transform (Pandas) → Load (SQLite) → Analyze (EDA & Risk) → Visualize (Power BI / Tableau)
 ```
+
+### Star Schema Tables
+`dim_fund` · `dim_date` · `fact_nav` · `fact_aum` · `fact_sip` · `fact_transactions`
+
+### Source Datasets (10 CSV files)
+`01_fund_master` · `02_nav_history` · `03_aum_by_fund_house` · `04_monthly_sip_inflows` · `05_category_inflows` · `06_industry_folio_count` · `07_scheme_performance` · `08_investor_transactions` · `09_portfolio_holdings` · `10_benchmark_indices`
+
+---
+
+## Milestone & Execution Roadmap (7 Days)
+
+| Day   | Milestone                                  |
+|-------|---------------------------------------------|
+| 1–2   | ETL Pipeline + SQLite Database              |
+| 3     | Star Schema + EDA Notebook (15+ charts)     |
+| 4     | Risk & Performance Metrics                  |
+| 5     | Dashboard Build (Power BI / Tableau)        |
+| 6     | Demographics & Benchmark Analysis           |
+| 7     | Final PDF Report + GitHub Portfolio Polish   |
 
 ---
 
 ## Day 1: Project Setup & Data Ingestion
 
 The objective of Day 1 is to:
-1. Establish the repository structure.
-2. Ingest 10 historical datasets, logging stats (shapes, null counts, duplicate counts, schema types).
-3. Fetch live NAV statistics for targeted mutual fund schemes from `api.mfapi.in`.
-4. Run cross-dataset validation checks (AMFI code audits between the master catalog and history files).
-5. Compile and generate automated ingestion and audit reports.
+1. Establish the repository structure with all required directories.
+2. Ingest all 10 historical CSV datasets, logging shapes, null counts, duplicate counts, and dtypes.
+3. Explore fund master — print unique fund houses, categories, sub-categories, and risk grades.
+4. Fetch live NAV data for targeted mutual fund schemes from `api.mfapi.in`.
+5. Run cross-dataset AMFI code validation between fund master and NAV history.
+6. Generate automated ingestion summary and data quality audit reports.
 
 ---
 
 ## Directory Layout
 
 ```
-bluestock-mf-analytics/
-├── .gitignore               # Standard Git ignore profiles
-├── README.md                # Project documentation
-├── requirements.txt         # Package dependencies
-├── Invoke-ExternalCommand.ps1 # Thread-safe execution wrapper for sandboxed terminals
-├── config/                  # External configurations
+Internship_coding/
+├── .gitignore
+├── README.md
+├── requirements.txt
+├── data_sets/               # Original 10 source CSVs (read-only)
 ├── data/
-│   ├── raw/                 # Ingested raw source CSVs & live NAV files
-│   └── processed/           # Day 2 database imports (normalized output)
+│   ├── raw/                 # Ingested copies + live NAV files
+│   └── processed/           # Cleaned/normalized output (Day 2+)
 ├── notebooks/               # Jupyter Notebooks for EDA (Day 3)
-├── reports/                 # Output audit reports, log sheets, and summary sheets
-│   ├── etl_pipeline.log     # Detailed execution logging
-│   ├── data_ingestion_summary.txt # Ingestion stats summary
-│   └── data_quality_report.md     # Referential integrity check logs
-├── sql/                     # SQLite schema definitions & SQL queries (Day 2)
-├── src/                     # Modular Python sources
+├── reports/                 # Ingestion summaries, audit reports, logs
+│   ├── etl_pipeline.log
+│   ├── data_ingestion_summary.txt
+│   └── data_quality_report.md
+├── sql/                     # SQLite schema DDL & queries (Day 2)
+├── dashboard/               # Power BI / Tableau files (Day 5)
+├── src/                     # Modular Python ETL scripts
 │   ├── __init__.py
-│   ├── config.py            # Central folder settings & targets config
-│   ├── data_ingestion.py    # Raw CSV ingestion and summary auditor
-│   ├── live_nav_fetch.py    # mfapi.in REST API live NAV downloader
-│   └── data_quality_report.py # AMFI key integrity validator
-└── tests/                   # Ingestion unit tests
+│   ├── config.py            # Central path settings & API targets
+│   ├── data_ingestion.py    # Day 1: Dataset loading & exploration
+│   ├── live_nav_fetch.py    # Day 1: mfapi.in REST API NAV downloader
+│   └── data_quality_report.py  # Day 1: AMFI code integrity validator
+└── project_description/     # Capstone task cards & architecture diagrams
 ```
-
----
-
-## Technical Note: Hosted Runspace Workaround
-During development inside sandboxed environments (such as some AI-powered terminal runners), standard process execution commands in PowerShell can fail with a `DriveNotFoundException` pointing to a missing `Microsoft.PowerShell.Core\FileSystem` drive mapping.
-
-To bypass this platform bug, the utility script `Invoke-ExternalCommand.ps1` was created. It wraps the .NET `System.Diagnostics.Process` API directly to spawn processes outside PowerShell's pipeline context, utilizing thread-safe `ConcurrentQueue` structures to pipe standard output in real-time.
 
 ---
 
 ## Getting Started
 
-### 1. Set Up Environment
-Ensure Python 3.10+ is installed on your local system. Install the required dependencies:
+### Prerequisites
+- Python 3.10+
+- pip (Python package manager)
+- Git
+
+### 1. Create Virtual Environment
+```bash
+python -m venv .venv
+.venv\Scripts\activate        # Windows
+# source .venv/bin/activate   # Linux/Mac
+```
+
+### 2. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Run Ingestion Script
-Ingests and prints basic statistics of the 10 core CSV datasets, moving them into the structured `data/raw/` path:
+### 3. Run Data Ingestion (Step 1)
+Copies all 10 CSVs into `data/raw/`, prints shape, dtypes, head, null counts, duplicates, and explores fund master:
 ```bash
 python src/data_ingestion.py
 ```
-*Outputs statistics directly to `reports/data_ingestion_summary.txt` and `reports/etl_pipeline.log`.*
-
-### 3. Run Live NAV Download
-Calls the `mfapi.in` API to download the latest NAV logs for selected schemes:
+**Outputs:**
+### 4. Run Live NAV Download (Tasks 4 & 5)
+Fetches latest NAV data from `api.mfapi.in`. This script auto-invokes the HDFC Top 100 demo (Task 4) first, followed by the 5 key target schemes (Task 5):
 ```bash
 python src/live_nav_fetch.py
 ```
-*Stores individual raw JSON outputs converted to CSVs under `data/raw/raw_nav_{amfi_code}.csv`.*
+**Outputs:**
+- `data/raw/raw_nav_{amfi_code}.csv` — Total 6 CSVs
 
-### 4. Run Referential Audit
-Audits scheme code connections between `fund_master` and `nav_history`:
+### 5. Explore Fund Master via Notebook (Task 6)
+Open the Jupyter notebook to see the fund houses, categories, sub-categories, and risk grades:
 ```bash
-python src/data_quality_report.py
+jupyter notebook notebooks/fund_master_exploration.ipynb
 ```
-*Generates the audit validation report directly inside `reports/data_quality_report.md`.*
+
+*(Note: Data Quality Audit (Task 7) is executed automatically at the end of `data_ingestion.py` and produces `reports/data_quality_report.md`)*
+
+---
+
+## Tech Stack
+- **Python** · Pandas · NumPy · Matplotlib · Seaborn · Plotly
+- **SQLAlchemy** · SQLite / PostgreSQL
+- **Requests** · scipy
+- **Power BI / Tableau** (Dashboard)
+- **Git / GitHub** (Version Control)
+
+---
+
+## Author
+Capstone Intern — Bluestock Fintech

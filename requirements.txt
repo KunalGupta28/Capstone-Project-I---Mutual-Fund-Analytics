@@ -7,3 +7,4 @@ sqlalchemy>=2.0.0
 requests>=2.30.0
 scipy>=1.10.0
 jupyter>=1.0.0
+# sqlite3 (Built-in standard library, does not require pip installation)

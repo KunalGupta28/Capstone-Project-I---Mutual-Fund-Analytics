@@ -1,5 +1,6 @@
 import sys
 import logging
+from datetime import date
 import pandas as pd
 from pathlib import Path
 
@@ -51,7 +52,7 @@ def audit_datasets():
         report_path = config.REPORTS_DIR / "data_quality_report.md"
         with open(report_path, "w", encoding="utf-8") as f:
             f.write("# Bluestock Mutual Fund Analytics - Data Quality Audit Report\n\n")
-            f.write(f"**Date of Audit**: 2026-06-24\n")
+            f.write(f"**Date of Audit**: {date.today()}\n")
             f.write(f"**Audit Status**: {'WARNING' if missing_in_nav else 'PASSED'}\n\n")
             
             f.write("## 1. Key Metrics Summary\n")

@@ -8,17 +8,16 @@ __pycache__/
 *.db
 *.sqlite
 
-# Environments
+# Virtual Environments
 .venv/
 env/
 venv/
 ENV/
 
-# Logs
+# Logs (generated at runtime)
 *.log
-reports/etl_pipeline.log
 
-# IDEs and editors
+# OS and IDE files
 .vscode/
 .idea/
 *.suo
@@ -26,13 +25,9 @@ reports/etl_pipeline.log
 *.njsproj
 *.sln
 *.swp
+.DS_Store
+Thumbs.db
 
-# Sandboxed Terminal diagnostics / wrappers
-Invoke-ExternalCommand.ps1
+# Temporary diagnostic files
 test_imports.py
-
-# Project reference files / PDFs
-project_description/
-Bluestock_MF_Capstone_Project.pdf
-
-
+Invoke-ExternalCommand.ps1

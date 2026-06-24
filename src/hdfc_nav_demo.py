@@ -8,8 +8,8 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parent))
 import config
 
-logger = logging.getLogger("LiveNAVFetch")
-# Inherit logging setup from data_ingestion if running in pipeline, else setup basic logging
+logger = logging.getLogger("HDFCDemo")
+# Setup basic logging
 if not logger.handlers:
     log_file = config.REPORTS_DIR / "etl_pipeline.log"
     logging.basicConfig(
@@ -21,10 +21,16 @@ if not logger.handlers:
         ]
     )
 
-def fetch_scheme_nav(scheme_code: str, scheme_name: str):
-    """Fetches historical and latest NAV data from api.mfapi.in and saves it as a raw CSV."""
-    url = f"{config.MF_API_BASE_URL}/{scheme_code}"
-    logger.info(f"Fetching NAV data for {scheme_name} (Code: {scheme_code}) from {url}...")
+def fetch_hdfc_demo():
+    """Fetches historical and latest NAV data specifically for HDFC Top 100 as the initial demo."""
+    logger.info("=" * 60)
+    logger.info("  DAY 1 — TASK 4: HDFC TOP 100 DEMO FETCH")
+    logger.info("=" * 60)
+    
+    code, name = list(config.HDFC_NAV_TARGET.items())[0]
+    
+    url = f"{config.MF_API_BASE_URL}/{code}"
+    logger.info(f"Fetching NAV data for {name} (Code: {code}) from {url}...")
     
     try:
         response = requests.get(url, timeout=15)
@@ -33,7 +39,7 @@ def fetch_scheme_nav(scheme_code: str, scheme_name: str):
         
         # Verify JSON schema contains expected keys
         if "data" not in data or "meta" not in data:
-            logger.error(f"Malformed API response for scheme {scheme_code}")
+            logger.error(f"Malformed API response for scheme {code}")
             return False
             
         nav_records = data["data"]
@@ -41,43 +47,30 @@ def fetch_scheme_nav(scheme_code: str, scheme_name: str):
         
         # Convert records list to Pandas DataFrame
         df = pd.DataFrame(nav_records)
-        df["amfi_code"] = scheme_code
-        df["scheme_name"] = meta.get("scheme_name", scheme_name)
+        df["amfi_code"] = code
+        df["scheme_name"] = meta.get("scheme_name", name)
         
         # Re-order columns: amfi_code, date, nav, scheme_name
         if "date" in df.columns and "nav" in df.columns:
             df = df[["amfi_code", "date", "nav", "scheme_name"]]
         else:
-            logger.error(f"Required data columns missing for scheme {scheme_code}")
+            logger.error(f"Required data columns missing for scheme {code}")
             return False
             
         # Write CSV file to data/raw/
-        output_file = config.DATA_RAW_DIR / f"raw_nav_{scheme_code}.csv"
+        output_file = config.DATA_RAW_DIR / f"raw_nav_{code}.csv"
         df.to_csv(output_file, index=False)
+        
         logger.info(f"Successfully saved {len(df)} NAV records to {output_file.name}")
+        logger.info(f"Dataset Head:\n{df.head()}")
         return True
         
     except requests.exceptions.RequestException as e:
-        logger.error(f"HTTP connection failed for scheme {scheme_code}: {str(e)}")
+        logger.error(f"HTTP connection failed for scheme {code}: {str(e)}")
         return False
     except Exception as e:
-        logger.error(f"Failed to process NAV data for scheme {scheme_code}: {str(e)}")
+        logger.error(f"Failed to process NAV data for scheme {code}: {str(e)}")
         return False
 
-def fetch_all_targets():
-    """Loops through all target schemes and fetches their NAV data."""
-    logger.info("=" * 60)
-    logger.info("  DAY 1 — TASK 5: FETCHING 5 KEY SCHEMES NAV")
-    logger.info("=" * 60)
-    success_count = 0
-    
-    for code, name in config.LIVE_NAV_TARGETS.items():
-        if fetch_scheme_nav(code, name):
-            success_count += 1
-            
-    logger.info(f"Live NAV Fetch job completed. Successfully fetched {success_count}/{len(config.LIVE_NAV_TARGETS)} schemes.")
-
 if __name__ == "__main__":
-    from hdfc_nav_demo import fetch_hdfc_demo
     fetch_hdfc_demo()
-    fetch_all_targets()
