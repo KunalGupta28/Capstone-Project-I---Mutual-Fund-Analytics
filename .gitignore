@@ -28,6 +28,5 @@ ENV/
 .DS_Store
 Thumbs.db
 
-# Temporary diagnostic files
-test_imports.py
-Invoke-ExternalCommand.ps1
+# Capstone project instructions
+Bluestock_MF_Capstone_Project.pdf
