@@ -14,6 +14,10 @@ DASHBOARD_DIR = BASE_DIR / "dashboard"
 # Source Data sets (where original files are initially placed)
 SOURCE_DATASETS_DIR = BASE_DIR / "data_sets"
 
+# Database Configuration
+DB_DIR = DATA_DIR / "db"
+DB_PATH = DB_DIR / "bluestock_mf.db"
+
 # Target schemes for Live NAV Ingestion
 HDFC_NAV_TARGET = {
     "125497": "HDFC_Top_100_Direct"
@@ -31,5 +35,5 @@ LIVE_NAV_TARGETS = {
 MF_API_BASE_URL = "https://api.mfapi.in/mf"
 
 # Ensure all structural directories exist
-for folder in [DATA_RAW_DIR, DATA_PROCESSED_DIR, REPORTS_DIR, NOTEBOOKS_DIR, SQL_DIR, DASHBOARD_DIR]:
+for folder in [DATA_RAW_DIR, DATA_PROCESSED_DIR, REPORTS_DIR, NOTEBOOKS_DIR, SQL_DIR, DASHBOARD_DIR, DB_DIR]:
     folder.mkdir(parents=True, exist_ok=True)
