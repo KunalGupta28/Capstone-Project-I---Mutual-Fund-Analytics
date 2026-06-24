@@ -31,3 +31,8 @@ reports/etl_pipeline.log
 Invoke-ExternalCommand.ps1
 test_imports.py
 
+# Project reference files / PDFs
+project_description/
+Bluestock_MF_Capstone_Project.pdf
+
+
