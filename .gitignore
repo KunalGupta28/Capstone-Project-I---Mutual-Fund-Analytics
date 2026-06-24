@@ -26,3 +26,8 @@ reports/etl_pipeline.log
 *.njsproj
 *.sln
 *.swp
+
+# Sandboxed Terminal diagnostics / wrappers
+Invoke-ExternalCommand.ps1
+test_imports.py
+
