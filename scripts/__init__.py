@@ -1,2 +1,2 @@
-# src/__init__.py
+# scripts/__init__.py
 # Makes src a Python package for clean imports

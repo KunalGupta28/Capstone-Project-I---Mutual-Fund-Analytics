@@ -1,13 +1,14 @@
 """
 generate_presentation.py — Produces reports/Presentation.pptx
-Uses python-pptx to create a 9-slide professional presentation.
+Uses python-pptx to create a 12-slide professional presentation.
 """
 import sys
 from pathlib import Path
 
-BASE_DIR    = Path(r"c:\Users\Dell\Desktop\Internship_coding")
-REPORTS_DIR = BASE_DIR / "reports"
-DATA_DIR    = BASE_DIR / "data" / "processed"
+BASE_DIR      = Path(r"c:\Users\Dell\Desktop\Internship_coding")
+REPORTS_DIR   = BASE_DIR / "reports"
+DATA_DIR      = BASE_DIR / "data" / "processed"
+DASHBOARD_DIR = BASE_DIR / "dashboard"
 
 try:
     import pandas as pd
@@ -123,12 +124,14 @@ def slide_title_block(slide, title, subtitle=None):
     add_line(slide, 0.5, 1.15, 12.3)
 
 
-# ── Slide Builders ────────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# SLIDE BUILDERS (12 slides)
+# ══════════════════════════════════════════════════════════════════════════════
 
 def slide_01_cover(prs):
+    """Slide 1: Title / Cover."""
     slide = prs.slides.add_slide(prs.slide_layouts[6])  # blank
     set_bg(slide)
-    # Gradient overlay box
     add_rect(slide, 0, 0, 13.33, 7.5, C_DARK)
     add_rect(slide, 0, 0, 13.33, 3, C_SLATE)
     add_text(slide, "BLUESTOCK FINTECH",
@@ -143,7 +146,7 @@ def slide_01_cover(prs):
             ("51K+", "NAV Data Points", 3.4),
             ("32K+", "Transactions", 5.6),
             ("10", "Raw Datasets", 7.8),
-            ("6", "Analysis Phases", 10.0)]
+            ("7", "Analysis Days", 10.0)]
     for val, lbl, x in kpis:
         add_kpi_box(slide, val, lbl, x, 3.4, w=2.0, h=1.4)
     add_text(slide, "Prepared by: Kunal Gupta  |  July 2026",
@@ -152,35 +155,42 @@ def slide_01_cover(prs):
              0.5, 5.9, 12.33, 0.5, font_size=11, color=C_DIM, align=PP_ALIGN.CENTER)
 
 
-def slide_02_objective(prs):
+def slide_02_problem(prs):
+    """Slide 2: Problem Statement & Objectives."""
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     set_bg(slide)
-    slide_title_block(slide, "Project Objective & Methodology", "End-to-end MF analytics pipeline")
-    add_bullet_box(slide, [
-        "Build a complete data pipeline for 40 mutual fund schemes across 12 AMCs",
-        "Perform EDA, performance analytics, and advanced risk metrics",
-        "Develop an interactive Power BI dashboard for business stakeholders",
-        "Implement a rule-based fund recommendation engine",
-    ], 0.5, 1.6, 5.8, 3.5)
-    phases = [("1", "ETL", C_EMERALD), ("2", "SQL DB", C_BLUE),
-              ("3", "EDA", C_AMBER), ("4", "Perf.", C_RED),
-              ("5", "Dashboard", C_EMERALD), ("6", "Adv. Analytics", C_BLUE)]
-    for i, (num, label, col) in enumerate(phases):
-        x = 7.5 + (i % 3) * 1.9
-        y = 1.7 + (i // 3) * 1.8
-        add_rect(slide, x, y, 1.7, 1.4, col)
-        add_text(slide, num, x, y + 0.1, 1.7, 0.6, font_size=22, bold=True,
-                 color=C_WHITE, align=PP_ALIGN.CENTER)
-        add_text(slide, label, x, y + 0.75, 1.7, 0.5, font_size=10,
-                 color=C_WHITE, align=PP_ALIGN.CENTER)
-    add_text(slide, "6-Phase Pipeline", 7.5, 1.3, 5.7, 0.4,
-             font_size=13, bold=True, color=C_DIM)
+    slide_title_block(slide, "Problem Statement & Objectives", "Why this project matters")
+    # Problems column
+    add_text(slide, "Key Problems", 0.5, 1.5, 5.5, 0.5,
+             font_size=16, bold=True, color=C_EMERALD)
+    problems = [
+        "Data Fragmentation: NAV, AUM, SIP data scattered across sources",
+        "No unified performance comparison across 40+ schemes",
+        "Missing benchmark tracking (Nifty 50/100/BSE SmallCap)",
+        "Investor behavior blindspot (32K+ transactions unexplored)",
+        "Static reporting — no interactive dashboards for stakeholders",
+    ]
+    add_bullet_box(slide, problems, 0.5, 2.1, 5.8, 4.5, icon_color=C_RED)
+
+    # Objectives column
+    add_text(slide, "Project Objectives", 7.0, 1.5, 5.5, 0.5,
+             font_size=16, bold=True, color=C_EMERALD)
+    objectives = [
+        "Build end-to-end ETL pipeline with SQLite star schema",
+        "Compute risk-adjusted metrics (Sharpe, Sortino, Alpha, VaR)",
+        "Generate 15+ EDA visualizations with business insights",
+        "Create 4-page interactive Power BI dashboard",
+        "Implement rule-based fund recommendation engine",
+    ]
+    add_bullet_box(slide, objectives, 7.0, 2.1, 5.8, 4.5, icon_color=C_EMERALD)
 
 
-def slide_03_dataset(prs):
+def slide_03_data_sources(prs):
+    """Slide 3: Data Sources & Datasets."""
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     set_bg(slide)
-    slide_title_block(slide, "Dataset Summary", "10 structured CSV datasets | Synthetic, realistic data")
+    slide_title_block(slide, "Data Sources & Datasets", "10 structured CSV datasets | AMFI India + mfapi.in")
+
     datasets = [
         ("01 Fund Master", "40 schemes, AMC, category, plan type"),
         ("02 NAV History", "51,400+ daily NAV records (2020-2025)"),
@@ -204,8 +214,55 @@ def slide_03_dataset(prs):
         add_text(slide, desc, x + 0.15, y + 0.45, 5.7, 0.35,
                  font_size=10, color=C_LIGHT)
 
+    add_text(slide, "Sources: AMFI India · mfapi.in REST API · NSE/BSE public data | Total: ~5.5 MB",
+             0.5, 7.0, 12.33, 0.4, font_size=10, color=C_DIM, align=PP_ALIGN.CENTER)
 
-def slide_04_eda(prs):
+
+def slide_04_architecture(prs):
+    """Slide 4: System Architecture & ETL Pipeline."""
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+    set_bg(slide)
+    slide_title_block(slide, "System Architecture & ETL Pipeline", "Extract → Transform → Load → Analyze → Visualize")
+
+    # Pipeline phases as connected boxes
+    phases = [
+        ("EXTRACT", "mfapi.in REST\n+ 10 CSVs", C_BLUE, 0.3),
+        ("TRANSFORM", "Pandas clean\nFFill + Dedup", C_AMBER, 2.9),
+        ("LOAD", "SQLite DB\nStar Schema", C_EMERALD, 5.5),
+        ("ANALYZE", "Metrics +\nEDA + Risk", C_RED, 8.1),
+        ("VISUALIZE", "Power BI\n+ Reports", C_BLUE, 10.7),
+    ]
+    for label, desc, color, x in phases:
+        add_rect(slide, x, 1.8, 2.3, 2.0, C_SLATE)
+        add_rect(slide, x, 1.8, 2.3, 0.5, color)
+        add_text(slide, label, x, 1.82, 2.3, 0.45,
+                 font_size=11, bold=True, color=C_WHITE, align=PP_ALIGN.CENTER)
+        add_text(slide, desc, x + 0.1, 2.4, 2.1, 1.2,
+                 font_size=10, color=C_LIGHT, align=PP_ALIGN.CENTER)
+
+    # Star schema tables
+    add_text(slide, "Star Schema Database (8 Tables)", 0.5, 4.2, 12, 0.5,
+             font_size=14, bold=True, color=C_EMERALD)
+
+    tables = [
+        ("dim_fund", C_BLUE), ("dim_date", C_BLUE),
+        ("fact_nav", C_EMERALD), ("fact_aum", C_EMERALD),
+        ("fact_sip", C_EMERALD), ("fact_transactions", C_AMBER),
+        ("fact_performance", C_AMBER), ("fact_portfolio", C_AMBER),
+    ]
+    for i, (tbl, color) in enumerate(tables):
+        col = i % 4
+        row = i // 4
+        x = 0.5 + col * 3.2
+        y = 4.9 + row * 1.0
+        add_rect(slide, x, y, 3.0, 0.8, C_SLATE)
+        add_rect(slide, x, y, 0.15, 0.8, color)
+        add_text(slide, tbl, x + 0.25, y + 0.15, 2.7, 0.5,
+                 font_size=11, bold=True, color=C_LIGHT)
+
+
+def slide_05_eda(prs):
+    """Slide 5: EDA Highlights."""
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     set_bg(slide)
     slide_title_block(slide, "EDA Highlights", "15 visualizations | 10 business insights")
@@ -233,7 +290,8 @@ def slide_04_eda(prs):
                  font_size=10, color=C_LIGHT)
 
 
-def slide_05_performance(prs):
+def slide_06_performance(prs):
+    """Slide 6: Fund Performance Scorecard."""
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     set_bg(slide)
     slide_title_block(slide, "Fund Performance Analytics", "Composite scorecard | Risk-adjusted returns")
@@ -254,7 +312,8 @@ def slide_05_performance(prs):
     ], 0.5, 3.8, 12, 3.2)
 
 
-def slide_06_risk(prs):
+def slide_07_risk(prs):
+    """Slide 7: Advanced Risk Metrics."""
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     set_bg(slide)
     slide_title_block(slide, "Advanced Risk Metrics", "VaR, CVaR, Rolling Sharpe, HHI Concentration")
@@ -276,45 +335,107 @@ def slide_06_risk(prs):
     ], 7.5, 2.1, 5.5, 4.5)
 
 
-def slide_07_dashboard(prs):
+def slide_08_dashboard_market(prs):
+    """Slide 8: Power BI Dashboard — Market & Performance (Pages 1 & 2)."""
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     set_bg(slide)
-    slide_title_block(slide, "Power BI Dashboard", "4-page interactive report | Dark slate theme")
-    pages = [
-        ("Page 1", "Industry Overview — AUM trend, Top AMCs, SIP inflow, Folio growth"),
-        ("Page 2", "Fund Performance — Risk-return scatter, NAV trends, Scorecard"),
-        ("Page 3", "Investor Behaviour — Demographics, SIP box, Geo heatmap, Cohort"),
-        ("Page 4", "Benchmark Analysis — NAV vs Index, Category flows, Sector HHI"),
-    ]
-    for i, (pg, desc) in enumerate(pages):
-        x = 0.5 + (i % 2) * 6.5
-        y = 1.6 + (i // 2) * 2.5
-        add_rect(slide, x, y, 6.2, 2.2, C_SLATE)
-        add_text(slide, pg, x + 0.2, y + 0.15, 5.8, 0.6,
-                 font_size=16, bold=True, color=C_EMERALD)
-        add_text(slide, desc, x + 0.2, y + 0.75, 5.8, 1.2,
-                 font_size=11, color=C_LIGHT)
-    add_text(slide, "Technology: Power BI Desktop | DAX Measures | Star Schema (9 tables)",
-             0.5, 7.0, 12.33, 0.4, font_size=10, color=C_DIM, align=PP_ALIGN.CENTER)
+    slide_title_block(slide, "Power BI Dashboard — Market & Performance",
+                      "Pages 1-2: Industry overview, AUM trends, fund scorecard")
+
+    # Embed page 1 and page 2 screenshots side by side
+    pg1 = DASHBOARD_DIR / "page_1.png"
+    pg2 = DASHBOARD_DIR / "page_2.png"
+    if pg1.exists():
+        slide.shapes.add_picture(str(pg1), Inches(0.3), Inches(1.5),
+                                 Inches(6.3), Inches(4.2))
+    if pg2.exists():
+        slide.shapes.add_picture(str(pg2), Inches(6.8), Inches(1.5),
+                                 Inches(6.3), Inches(4.2))
+
+    add_text(slide, "Page 1: AUM trend, Top AMCs, SIP inflow, Folio growth",
+             0.3, 5.9, 6.3, 0.5, font_size=10, color=C_DIM, align=PP_ALIGN.CENTER)
+    add_text(slide, "Page 2: Risk-return scatter, NAV trends, Performance table",
+             6.8, 5.9, 6.3, 0.5, font_size=10, color=C_DIM, align=PP_ALIGN.CENTER)
+
+    add_text(slide, "Technology: Power BI Desktop | DAX Measures | Star Schema | Slicers + Drill-through",
+             0.5, 6.8, 12.33, 0.4, font_size=10, color=C_DIM, align=PP_ALIGN.CENTER)
 
 
-def slide_08_recommendations(prs):
+def slide_09_dashboard_investor(prs):
+    """Slide 9: Power BI Dashboard — Investor & Benchmark (Pages 3 & 4)."""
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     set_bg(slide)
-    slide_title_block(slide, "Key Recommendations", "Data-driven insights for AMCs, distributors & investors")
+    slide_title_block(slide, "Power BI Dashboard — Investor & Benchmark",
+                      "Pages 3-4: Demographics, geographic heatmap, benchmark comparison")
+
+    pg3 = DASHBOARD_DIR / "page_3.png"
+    pg4 = DASHBOARD_DIR / "page_4.png"
+    if pg3.exists():
+        slide.shapes.add_picture(str(pg3), Inches(0.3), Inches(1.5),
+                                 Inches(6.3), Inches(4.2))
+    if pg4.exists():
+        slide.shapes.add_picture(str(pg4), Inches(6.8), Inches(1.5),
+                                 Inches(6.3), Inches(4.2))
+
+    add_text(slide, "Page 3: Age/Gender splits, Geo heatmap, City tier analysis",
+             0.3, 5.9, 6.3, 0.5, font_size=10, color=C_DIM, align=PP_ALIGN.CENTER)
+    add_text(slide, "Page 4: NAV vs Index, Category flows, Sector HHI",
+             6.8, 5.9, 6.3, 0.5, font_size=10, color=C_DIM, align=PP_ALIGN.CENTER)
+
+    add_text(slide, "Consistent fintech blue/purple theme | Slicers on every page | Interactive tooltips",
+             0.5, 6.8, 12.33, 0.4, font_size=10, color=C_DIM, align=PP_ALIGN.CENTER)
+
+
+def slide_10_recommender(prs):
+    """Slide 10: Recommender Logic & Cohort Analysis."""
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+    set_bg(slide)
+    slide_title_block(slide, "Fund Recommender & Cohort Analysis",
+                      "Rule-based engine + investor behavior insights")
+
+    # Recommender section (left)
+    add_text(slide, "Recommendation Engine", 0.5, 1.5, 6, 0.5,
+             font_size=14, bold=True, color=C_EMERALD)
+    add_bullet_box(slide, [
+        "Maps risk appetite → compatible fund risk grades",
+        "Ranks candidates by Sharpe Ratio (top-3)",
+        "Low: Low risk → Bond/Debt funds",
+        "Moderate: Moderate + Moderately High → Flexi/Large Cap",
+        "High: High + Very High → Small Cap/Mid Cap",
+        "CLI: python scripts/recommender.py --risk Moderate",
+    ], 0.5, 2.1, 5.8, 4.5, icon_color=C_BLUE)
+
+    # Cohort section (right)
+    add_text(slide, "Investor Cohort Insights", 7.0, 1.5, 6, 0.5,
+             font_size=14, bold=True, color=C_EMERALD)
+    add_bullet_box(slide, [
+        "2022 cohort: Highest avg SIP at ₹8,200+/month",
+        "38.2% of 6+ SIP investors are 'at-risk' (gap >35 days)",
+        "Under-30 investors: Fastest growing segment (+28% YoY)",
+        "Tier-2 cities: Lower churn (32%) vs Tier-1 (40%)",
+        "Jan/Apr: Peak discontinuation months (tax season effect)",
+        "HHI analysis: Concentration ≠ better returns",
+    ], 7.0, 2.1, 5.8, 4.5, icon_color=C_AMBER)
+
+
+def slide_11_recommendations(prs):
+    """Slide 11: Strategic Recommendations."""
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+    set_bg(slide)
+    slide_title_block(slide, "Strategic Recommendations", "Data-driven insights for AMCs, distributors & investors")
     recs = [
         (C_EMERALD, "For Investors",
-         ["SIP investors in 2022 cohort have benefited most — stay invested through cycles",
-          "Small Cap: High returns (24% CAGR) but requires 3+ year horizon & high risk tolerance",
+         ["SIP investors in 2022 cohort benefited most — stay invested through cycles",
+          "Small Cap: High returns (24% CAGR) but requires 3+ year horizon",
           "Prefer Direct Plans: Save 0.7-1.0% annually over Regular Plans"]),
-        (C_BLUE, "For Fund Managers / AMCs",
-         ["SIP retention: 38% at-risk investors need proactive outreach programs",
-          "Expense ratio reduction in Regular plans would improve competitiveness",
-          "Diversified portfolios (low HHI) delivered comparable returns with less risk"]),
+        (C_BLUE, "For Fund Managers",
+         ["SIP retention: 38% at-risk investors need proactive outreach",
+          "Expense ratio reduction in Regular plans improves competitiveness",
+          "Diversified portfolios (low HHI) delivered comparable risk-adjusted returns"]),
         (C_AMBER, "For Bluestock Fintech",
-         ["Productionize the recommender API as a client-facing tool",
-          "Build rolling Sharpe monitoring for real-time fund-of-funds rebalancing",
-          "Use cohort analysis to power personalized investor communication"]),
+         ["Productionize recommender as a REST API endpoint",
+          "Rolling Sharpe monitoring for fund-of-funds rebalancing",
+          "Cohort analysis powers personalized investor communication"]),
     ]
     for i, (color, title, bullets) in enumerate(recs):
         x = 0.5 + i * 4.3
@@ -325,24 +446,26 @@ def slide_08_recommendations(prs):
         add_bullet_box(slide, bullets, x + 0.1, 2.2, 3.8, 4.5, icon_color=color)
 
 
-def slide_09_conclusion(prs):
+def slide_12_thankyou(prs):
+    """Slide 12: Conclusion & Thank You."""
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     set_bg(slide)
     add_rect(slide, 0, 0, 13.33, 7.5, C_DARK)
     add_rect(slide, 0, 0, 13.33, 2.0, C_SLATE)
-    add_text(slide, "Conclusion", 0.5, 0.2, 12.33, 1.0,
-             font_size=36, bold=True, color=C_EMERALD, align=PP_ALIGN.CENTER)
+    add_text(slide, "Thank You",
+             0.5, 0.2, 12.33, 1.0, font_size=40, bold=True, color=C_EMERALD, align=PP_ALIGN.CENTER)
     add_text(slide, "Bluestock Fintech | Mutual Fund Analytics Capstone",
              0.5, 1.2, 12.33, 0.6, font_size=14, color=C_DIM, align=PP_ALIGN.CENTER)
     add_line(slide, 1.5, 2.1, 10.33)
+
     achievements = [
-        "10 raw datasets → cleaned, modelled, and loaded into SQLite",
+        "10 raw datasets → cleaned, modelled, and loaded into SQLite star schema",
         "15 EDA visualizations with 10 actionable business insights",
-        "40 funds scored on 5 performance dimensions",
-        "4-page interactive Power BI dashboard with DAX-driven metrics",
+        "40 funds scored on 5 performance dimensions (CAGR, Sharpe, Alpha, Expense, MaxDD)",
+        "4-page interactive Power BI dashboard with DAX-driven KPI cards",
         "Advanced risk analytics: VaR, CVaR, Rolling Sharpe, HHI, Cohort, SIP Continuity",
-        "Rule-based fund recommendation engine",
-        "Comprehensive final report + this presentation",
+        "Rule-based fund recommendation engine with CLI interface",
+        "Comprehensive 15–20 page final report + this 12-slide presentation",
     ]
     for i, a in enumerate(achievements):
         y = 2.3 + i * 0.65
@@ -351,8 +474,9 @@ def slide_09_conclusion(prs):
                  font_size=14, bold=True, color=C_EMERALD)
         add_text(slide, a, 1.1, y + 0.07, 11.5, 0.4,
                  font_size=12, color=C_LIGHT)
-    add_text(slide, "Thank You",
-             0.5, 7.0, 12.33, 0.45, font_size=14, color=C_DIM,
+
+    add_text(slide, "Kunal Gupta  |  Internship @ Bluestock Fintech  |  July 2026",
+             0.5, 7.0, 12.33, 0.45, font_size=13, color=C_DIM,
              align=PP_ALIGN.CENTER, italic=True)
 
 
@@ -362,15 +486,18 @@ def build():
     prs.slide_width  = SLIDE_W
     prs.slide_height = SLIDE_H
 
-    slide_01_cover(prs)
-    slide_02_objective(prs)
-    slide_03_dataset(prs)
-    slide_04_eda(prs)
-    slide_05_performance(prs)
-    slide_06_risk(prs)
-    slide_07_dashboard(prs)
-    slide_08_recommendations(prs)
-    slide_09_conclusion(prs)
+    slide_01_cover(prs)            # 1. Cover
+    slide_02_problem(prs)          # 2. Problem Statement & Objectives
+    slide_03_data_sources(prs)     # 3. Data Sources & Datasets
+    slide_04_architecture(prs)     # 4. System Architecture & ETL Pipeline
+    slide_05_eda(prs)              # 5. EDA Highlights
+    slide_06_performance(prs)      # 6. Fund Performance Scorecard
+    slide_07_risk(prs)             # 7. Advanced Risk Metrics
+    slide_08_dashboard_market(prs) # 8. Dashboard — Market & Performance
+    slide_09_dashboard_investor(prs) # 9. Dashboard — Investor & Benchmark
+    slide_10_recommender(prs)      # 10. Recommender & Cohort
+    slide_11_recommendations(prs)  # 11. Strategic Recommendations
+    slide_12_thankyou(prs)         # 12. Thank You
 
     out = REPORTS_DIR / "Presentation.pptx"
     prs.save(str(out))

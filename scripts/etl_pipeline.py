@@ -54,14 +54,10 @@ def main():
     logger.info("=" * 60)
 
     scripts_dir = BASE_DIR / "scripts"
-    src_dir = BASE_DIR / "src"
 
-    # Resolve script paths (prefer scripts/, fall back to src/)
+    # Resolve script paths from scripts/ directory
     def resolve(filename):
-        p = scripts_dir / filename
-        if p.exists():
-            return str(p)
-        return str(src_dir / filename)
+        return str(scripts_dir / filename)
 
     phases = [
         ("Data Ingestion",    resolve("data_ingestion.py"),    "main"),
