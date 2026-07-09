@@ -17,7 +17,6 @@ warnings.filterwarnings("ignore")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(BASE_DIR / "scripts"))
-sys.path.insert(0, str(BASE_DIR / "src"))
 
 from config import DATA_PROCESSED_DIR, REPORTS_DIR, SOURCE_DATASETS_DIR
 

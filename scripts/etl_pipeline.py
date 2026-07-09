@@ -11,7 +11,6 @@ from pathlib import Path
 # Ensure scripts/ is importable
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(BASE_DIR / "scripts"))
-sys.path.insert(0, str(BASE_DIR / "src"))
 
 from config import REPORTS_DIR
 
