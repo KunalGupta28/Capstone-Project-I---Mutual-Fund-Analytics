@@ -14,8 +14,8 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
-# Append src to path
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
+# Append scripts to path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 import config
 # Custom CSS for Bluestock Branding (Fintech Blue + Emerald Green Theme)
 st.markdown("""
