@@ -33,6 +33,17 @@ Extract (APIs + CSVs) → Transform (Pandas) → Load (SQLite) → Analyze (EDA 
 
 ---
 
+## Completed Bonus Challenges
+
+We have successfully implemented **four** bonus challenges from the evaluation sheet (+10 marks each):
+
+*   **B1 — ETL Scheduler Daemon ([schedule_etl.py](file:///c:/Users/Dell/Desktop/Internship_coding/scripts/schedule_etl.py))**: Automatically executes the NAV ingestion and ETL pipeline. Generates Windows task registry scripts (`register_windows_task.bat`) and Linux crontab configurations (`register_cron.sh`) to run the ETL every weekday at 8:00 PM.
+*   **B3 — Monte Carlo Projections ([monte_carlo.py](file:///c:/Users/Dell/Desktop/Internship_coding/scripts/monte_carlo.py))**: Projects daily log-normal price returns over a 5-year horizon (1,260 trading days) for the top 5 Sharpe ratio funds over 1,000 runs, showing the 5th, 50th, and 95th percentiles. Saves chart to `reports/advanced_monte_carlo.png`.
+*   **B4 — Markowitz Efficient Frontier ([portfolio_optimization.py](file:///c:/Users/Dell/Desktop/Internship_coding/scripts/portfolio_optimization.py))**: Implements Modern Portfolio Theory (MPT) mean-variance optimization for the top 5 Sharpe funds, simulating 5,000 random portfolios to trace the Efficient Frontier and locate Maximum Sharpe and Minimum Volatility portfolio weights. Saves chart to `reports/advanced_portfolio_optimization.png`.
+*   **B5 — Weekly HTML Email Digest ([email_report.py](file:///c:/Users/Dell/Desktop/Internship_coding/scripts/email_report.py))**: Builds a professional fintech HTML email digest containing summary statistics, KPIs, and performance rankings. Saves HTML output to `reports/weekly_summary.html`.
+
+---
+
 ## Directory Layout
 
 ```
@@ -93,6 +104,10 @@ Internship_coding/
 │   ├── etl_pipeline.py                  # Master ETL orchestrator (all phases)
 │   ├── compute_metrics.py               # Day 4: CAGR, Sharpe, Sortino, Alpha/Beta
 │   ├── recommender.py                   # Day 6: Rule-based fund recommendation CLI
+│   ├── schedule_etl.py                  # Bonus B1: Weekday 8 PM cron scheduler daemon
+│   ├── monte_carlo.py                   # Bonus B3: 5-Year NAV Monte Carlo simulation
+│   ├── portfolio_optimization.py         # Bonus B4: Markowitz mean-variance optimizer
+│   ├── email_report.py                  # Bonus B5: Automated weekly HTML email generator
 │   ├── generate_report.py               # Day 7: Automated PDF report generator
 │   └── generate_presentation.py         # Day 7: Automated PPTX deck generator
 └── project_description/                 # Capstone task cards & architecture diagrams
@@ -177,6 +192,28 @@ Automatically generate the PDF business report and PowerPoint presentation:
 python scripts/generate_report.py        # → reports/Final_Report.pdf (15–20 pages)
 python scripts/generate_presentation.py  # → reports/Presentation.pptx (12 slides)
 ```
+
+### 9. Run Completed Bonus Challenge Scripts
+Execute the scripts created for the four bonus challenges:
+```bash
+# B1: Run the ETL Scheduler Daemon (Mon-Fri 8 PM background check / configuration generator)
+python scripts/schedule_etl.py
+
+# B3: Run the Monte Carlo Simulation (5-Year daily return projection for top 5 Sharpe funds)
+python scripts/monte_carlo.py
+
+# B4: Run the Markowitz Mean-Variance Portfolio Optimizer (Efficient Frontier for top 5 funds)
+python scripts/portfolio_optimization.py
+
+# B5: Run the HTML Weekly Email Digest report generator
+python scripts/email_report.py
+```
+**Outputs:**
+- `reports/advanced_monte_carlo.png` (Monte Carlo uncertainty band plot)
+- `reports/advanced_portfolio_optimization.png` (Markowitz efficient frontier plot)
+- `reports/weekly_summary.html` (Weekly email digest report)
+- `data/processed/monte_carlo_projections.csv` (Drift/volatility projection statistics)
+- `data/processed/efficient_frontier_statistics.csv` (MSR and MVP weight allocations)
 
 ---
 

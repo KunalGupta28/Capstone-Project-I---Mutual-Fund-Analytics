@@ -55,17 +55,39 @@ def compute_cagr(nav_df: pd.DataFrame) -> pd.DataFrame:
     records = []
     for amfi, grp in nav_df.groupby("amfi_code"):
         grp = grp.dropna(subset=["nav"]).sort_values("date")
-        if len(grp) < 2:
+        n_total = len(grp)
+        if n_total < 2:
             continue
-        start, end = grp["nav"].iloc[0], grp["nav"].iloc[-1]
-        n_years = (grp["date"].iloc[-1] - grp["date"].iloc[0]).days / 365.25
-        cagr_1yr = (end / start) ** (1 / 1) - 1 if n_years >= 1 else np.nan
-        cagr_3yr = (end / start) ** (1 / 3) - 1 if n_years >= 3 else np.nan
-        cagr_5yr = (end / start) ** (1 / 5) - 1 if n_years >= 5 else np.nan
-        records.append(dict(amfi_code=amfi,
-                            cagr_1yr_pct=round(cagr_1yr * 100, 4) if not np.isnan(cagr_1yr) else np.nan,
-                            cagr_3yr_pct=round(cagr_3yr * 100, 4) if not np.isnan(cagr_3yr) else np.nan,
-                            cagr_5yr_pct=round(cagr_5yr * 100, 4) if not np.isnan(cagr_5yr) else np.nan))
+        
+        nav_end = grp["nav"].iloc[-1]
+        
+        # 1-Year CAGR (252 trading days)
+        if n_total >= 253:
+            nav_start_1y = grp["nav"].iloc[-253]
+            cagr_1yr = (nav_end / nav_start_1y) ** (252 / 252) - 1
+        else:
+            cagr_1yr = np.nan
+            
+        # 3-Year CAGR (756 trading days)
+        if n_total >= 757:
+            nav_start_3y = grp["nav"].iloc[-757]
+            cagr_3yr = (nav_end / nav_start_3y) ** (252 / 756) - 1
+        else:
+            cagr_3yr = np.nan
+            
+        # 5-Year CAGR (1260 trading days)
+        if n_total >= 1261:
+            nav_start_5y = grp["nav"].iloc[-1261]
+            cagr_5yr = (nav_end / nav_start_5y) ** (252 / 1260) - 1
+        else:
+            cagr_5yr = np.nan
+            
+        records.append(dict(
+            amfi_code=amfi,
+            cagr_1yr_pct=round(cagr_1yr * 100, 4) if not np.isnan(cagr_1yr) else np.nan,
+            cagr_3yr_pct=round(cagr_3yr * 100, 4) if not np.isnan(cagr_3yr) else np.nan,
+            cagr_5yr_pct=round(cagr_5yr * 100, 4) if not np.isnan(cagr_5yr) else np.nan
+        ))
     return pd.DataFrame(records)
 
 
@@ -135,7 +157,7 @@ def compute_scorecard(cagr_df, sharpe_df, alpha_beta_df, dd_df) -> pd.DataFrame:
     perf = pd.read_csv(SOURCE_DATASETS_DIR / "07_scheme_performance.csv")
     perf["amfi_code"] = perf["amfi_code"].astype(str)
 
-    merged = perf[["amfi_code", "scheme_name", "fund_house", "sub_category", "expense_ratio_pct"]].copy()
+    merged = perf[["amfi_code", "scheme_name", "fund_house", "category", "expense_ratio_pct"]].copy()
 
     for df, col in [(cagr_df, "cagr_3yr_pct"), (sharpe_df, "sharpe_ratio"),
                     (dd_df, "max_drawdown_pct")]:
@@ -164,7 +186,7 @@ def compute_scorecard(cagr_df, sharpe_df, alpha_beta_df, dd_df) -> pd.DataFrame:
     merged["scorecard_rank"] = merged["composite_score"].rank(
         method="first", ascending=False).astype(int)
 
-    cols = ["amfi_code", "scheme_name", "fund_house", "sub_category",
+    cols = ["amfi_code", "scheme_name", "fund_house", "category",
             "cagr_3yr_pct", "sharpe_ratio", "alpha",
             "expense_ratio_pct", "max_drawdown_pct",
             "composite_score", "scorecard_rank"]
@@ -175,33 +197,33 @@ def main():
     nav_df = load_nav()
     benchmark = load_benchmark()
 
-    logger.info("Computing CAGR…")
+    logger.info("Computing CAGR...")
     cagr_df = compute_cagr(nav_df)
     cagr_df.to_csv(DATA_PROCESSED_DIR / "cagr_report.csv", index=False)
-    logger.info(f"  → cagr_report.csv ({len(cagr_df)} rows)")
+    logger.info(f"  -> cagr_report.csv ({len(cagr_df)} rows)")
 
-    logger.info("Computing Sharpe…")
+    logger.info("Computing Sharpe...")
     sharpe_df = compute_sharpe(nav_df)
     sharpe_df.to_csv(DATA_PROCESSED_DIR / "sharpe_values.csv", index=False)
 
-    logger.info("Computing Sortino…")
+    logger.info("Computing Sortino...")
     sortino_df = compute_sortino(nav_df)
     sortino_df.to_csv(DATA_PROCESSED_DIR / "sortino_values.csv", index=False)
 
-    logger.info("Computing Alpha/Beta…")
+    logger.info("Computing Alpha/Beta...")
     ab_df = compute_alpha_beta(nav_df, benchmark)
     ab_df.to_csv(DATA_PROCESSED_DIR / "alpha_beta.csv", index=False)
 
-    logger.info("Computing Max Drawdown…")
+    logger.info("Computing Max Drawdown...")
     dd_df = compute_max_drawdown(nav_df)
     dd_df.to_csv(DATA_PROCESSED_DIR / "max_drawdown.csv", index=False)
 
-    logger.info("Building Fund Scorecard…")
+    logger.info("Building Fund Scorecard...")
     scorecard = compute_scorecard(cagr_df, sharpe_df, ab_df, dd_df)
     scorecard.to_csv(DATA_PROCESSED_DIR / "fund_scorecard.csv", index=False)
-    logger.info(f"  → fund_scorecard.csv ({len(scorecard)} funds ranked)")
+    logger.info(f"  -> fund_scorecard.csv ({len(scorecard)} funds ranked)")
 
-    logger.info("✅ All metrics computed successfully.")
+    logger.info("All metrics computed successfully. [OK]")
 
 
 if __name__ == "__main__":

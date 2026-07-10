@@ -664,6 +664,37 @@ def build():
         sp(0.3),
     ]
 
+    story += [*subsection("8.3 Monte Carlo Projections (Bonus Challenge B3)")]
+    story += embed_image(
+        REPORTS_DIR / "advanced_monte_carlo.png",
+        width=14 * cm, height=8.5 * cm,
+        caption="Figure 14: 5-Year NAV Monte Carlo Projections (1,000 Simulations)"
+    )
+    story += [
+        sp(0.2),
+        body("Using a geometric Brownian motion (GBM) model, daily NAV price returns are projected 5 years (1,260 trading days) into the future based on estimated historical mean drifts and volatilities:"),
+        bullet("Provides 90% uncertainty bands bounded by the 5th and 95th percentiles of all simulated runs."),
+        bullet("SBI Small Cap Fund shows the widest uncertainty band, reflecting high historical daily volatility."),
+        bullet("Large Cap funds exhibit tighter bands, signifying more predictable, lower-drift growth profiles."),
+        sp(0.3),
+    ]
+    
+    story += [PageBreak()]
+    story += [*subsection("8.4 Markowitz Portfolio Optimization (Bonus Challenge B4)")]
+    story += embed_image(
+        REPORTS_DIR / "advanced_portfolio_optimization.png",
+        width=13.5 * cm, height=9 * cm,
+        caption="Figure 15: Markowitz Efficient Frontier & Optimal Weights"
+    )
+    story += [
+        sp(0.2),
+        body("Modern Portfolio Theory (MPT) applied to the top 5 Sharpe ratio funds by simulating 5,000 random portfolios:"),
+        bullet("Maximum Sharpe Ratio (MSR) Portfolio (starred in red) yields the highest expected risk-adjusted return."),
+        bullet("Minimum Volatility Portfolio (diamond in blue) represents the lowest overall variance combination."),
+        bullet("Optimal asset allocations are automatically logged to data/processed/efficient_frontier_statistics.csv."),
+        sp(0.3),
+    ]
+
     # ══════════════════════════════════════════════════════════════════════════
     # PAGE 13 — INVESTOR COHORT & SIP CONTINUITY
     # ══════════════════════════════════════════════════════════════════════════
@@ -774,7 +805,7 @@ def build():
     ]:
         pg_path = DASHBOARD_DIR / f"page_{pg_num}.png"
         story += embed_image(pg_path, width=14*cm, height=8*cm,
-                             caption=f"Figure {13+pg_num}: {desc}")
+                             caption=f"Figure {15+pg_num}: {desc}")
         story.append(sp(0.3))
 
     story.append(PageBreak())

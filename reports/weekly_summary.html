@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #0F172A;
+            color: #E2E8F0;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #1E293B;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #334155;
+        }
+        .header {
+            background-color: #0F172A;
+            padding: 25px;
+            text-align: center;
+            border-bottom: 2px solid #10B981;
+        }
+        .header h1 {
+            color: #10B981;
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .header p {
+            color: #94A3B8;
+            margin: 5px 0 0 0;
+            font-size: 14px;
+        }
+        .content {
+            padding: 25px;
+        }
+        .kpi-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            gap: 10px;
+        }
+        .kpi-card {
+            flex: 1;
+            background-color: #0F172A;
+            border: 1px solid #334155;
+            padding: 15px 10px;
+            text-align: center;
+            border-radius: 6px;
+        }
+        .kpi-val {
+            font-size: 20px;
+            font-weight: bold;
+            color: #10B981;
+            margin: 0;
+        }
+        .kpi-label {
+            font-size: 10px;
+            color: #94A3B8;
+            margin: 5px 0 0 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        h2 {
+            color: #E2E8F0;
+            font-size: 16px;
+            border-left: 3px solid #10B981;
+            padding-left: 10px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+        th {
+            background-color: #0F172A;
+            color: #10B981;
+            text-align: left;
+            padding: 10px;
+            border-bottom: 1px solid #334155;
+            font-weight: bold;
+        }
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #334155;
+            color: #E2E8F0;
+        }
+        tr:nth-child(even) td {
+            background-color: #243347;
+        }
+        .footer {
+            background-color: #0F172A;
+            padding: 15px;
+            text-align: center;
+            font-size: 11px;
+            color: #94A3B8;
+            border-top: 1px solid #334155;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #10B981;
+            color: #0F172A;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            border-radius: 4px;
+            margin-top: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>BLUESTOCK FINTECH</h1>
+            <p>Mutual Fund Performance Weekly Digest</p>
+        </div>
+        <div class="content">
+            <div class="kpi-container">
+                <div class="kpi-card">
+                    <p class="kpi-val">40</p>
+                    <p class="kpi-label">Funds Tracked</p>
+                </div>
+                <div class="kpi-card">
+                    <p class="kpi-val">51K+</p>
+                    <p class="kpi-label">NAV Points</p>
+                </div>
+                <div class="kpi-card">
+                    <p class="kpi-val">32K+</p>
+                    <p class="kpi-label">Transactions</p>
+                </div>
+            </div>
+
+            <h2>Top 5 Funds by Composite Score</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Scheme Name</th>
+                        <th>3Y Return</th>
+                        <th>Sharpe</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+    
+                    <tr>
+                        <td>1</td>
+                        <td><b>ICICI Pru Midcap Fund - Regular - G...</b><br><span style="color:#94A3B8; font-size:10px;">ICICI Prudential MF</span></td>
+                        <td>29.6%</td>
+                        <td>1.18</td>
+                        <td style="color:#10B981; font-weight:bold;">84.5</td>
+                    </tr>
+        
+                    <tr>
+                        <td>2</td>
+                        <td><b>HDFC Mid-Cap Opportunities Fund - R...</b><br><span style="color:#94A3B8; font-size:10px;">HDFC Mutual Fund</span></td>
+                        <td>33.8%</td>
+                        <td>1.09</td>
+                        <td style="color:#10B981; font-weight:bold;">82.0</td>
+                    </tr>
+        
+                    <tr>
+                        <td>3</td>
+                        <td><b>Axis Midcap Fund - Regular - Growth</b><br><span style="color:#94A3B8; font-size:10px;">Axis Mutual Fund</span></td>
+                        <td>36.2%</td>
+                        <td>1.00</td>
+                        <td style="color:#10B981; font-weight:bold;">80.8</td>
+                    </tr>
+        
+                    <tr>
+                        <td>4</td>
+                        <td><b>SBI Small Cap Fund - Regular Plan -...</b><br><span style="color:#94A3B8; font-size:10px;">SBI Mutual Fund</span></td>
+                        <td>28.1%</td>
+                        <td>0.95</td>
+                        <td style="color:#10B981; font-weight:bold;">78.9</td>
+                    </tr>
+        
+                    <tr>
+                        <td>5</td>
+                        <td><b>Mirae Asset Large Cap Fund - Regula...</b><br><span style="color:#94A3B8; font-size:10px;">Mirae Asset MF</span></td>
+                        <td>31.5%</td>
+                        <td>1.45</td>
+                        <td style="color:#10B981; font-weight:bold;">78.5</td>
+                    </tr>
+        
+                </tbody>
+            </table>
+
+            <h2>Market Pulse Highlights</h2>
+            <p style="font-size: 13px; line-height: 1.6; margin: 0 0 10px 0;">
+                The Nifty 100 benchmark remained flat this week, while Mid & Small Cap segments showed minor 0.8% gains. 
+                SIP inflows have continued their strong trajectory, reflecting sustained retail participation in B30 tier cities. 
+                Tail-risk analytics (VaR 95%) indicates current daily potential losses are capped at 1.85% for equity and 0.22% for debt-focused funds.
+            </p>
+            
+            <div style="text-align: center;">
+                <a href="https://github.com/KunalGupta28/Capstone-Project-I---Mutual-Fund-Analytics" class="btn">View Interactive Dashboard</a>
+            </div>
+        </div>
+        <div class="footer">
+            This is an automated performance update generated by scripts/email_report.py.<br>
+            Bluestock Fintech Capstone 2026. All data simulated for educational use.
+        </div>
+    </div>
+</body>
+</html>

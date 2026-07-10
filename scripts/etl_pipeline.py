@@ -40,10 +40,10 @@ def run_phase(name: str, module_path: str, func_name: str = "main") -> bool:
         if hasattr(mod, func_name):
             getattr(mod, func_name)()
         elapsed = time.time() - t0
-        logger.info(f"✅ Phase '{name}' completed in {elapsed:.1f}s")
+        logger.info(f"[OK] Phase '{name}' completed in {elapsed:.1f}s")
         return True
     except Exception as e:
-        logger.error(f"❌ Phase '{name}' failed: {e}", exc_info=True)
+        logger.error(f"[FAIL] Phase '{name}' failed: {e}", exc_info=True)
         return False
 
 
@@ -68,7 +68,7 @@ def main():
     results = {}
     for phase_name, path, func in phases:
         ok = run_phase(phase_name, path, func)
-        results[phase_name] = "✅ PASSED" if ok else "❌ FAILED"
+        results[phase_name] = "[OK] PASSED" if ok else "[FAIL] FAILED"
 
     logger.info("=" * 60)
     logger.info("ETL PIPELINE SUMMARY")
@@ -81,7 +81,7 @@ def main():
         logger.error(f"Pipeline completed with {len(failed)} failure(s).")
         sys.exit(1)
     else:
-        logger.info("All phases completed successfully. ✅")
+        logger.info("All phases completed successfully. [OK]")
 
 
 if __name__ == "__main__":
