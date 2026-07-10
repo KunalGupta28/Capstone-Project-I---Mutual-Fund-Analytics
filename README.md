@@ -35,9 +35,10 @@ Extract (APIs + CSVs) → Transform (Pandas) → Load (SQLite) → Analyze (EDA 
 
 ## Completed Bonus Challenges
 
-We have successfully implemented **four** bonus challenges from the evaluation sheet (+10 marks each):
+We have successfully implemented **five** bonus challenges from the evaluation sheet (+10 marks each):
 
 *   **B1 — ETL Scheduler Daemon ([schedule_etl.py](file:///c:/Users/Dell/Desktop/Internship_coding/scripts/schedule_etl.py))**: Automatically executes the NAV ingestion and ETL pipeline. Generates Windows task registry scripts (`register_windows_task.bat`) and Linux crontab configurations (`register_cron.sh`) to run the ETL every weekday at 8:00 PM.
+*   **B2 — Streamlit Web Dashboard ([app.py](file:///c:/Users/Dell/Desktop/Internship_coding/dashboard/app.py))**: Implements an interactive multi-page web application using Plotly and Streamlit as an alternative to Power BI, offering real-time data exploration, custom slicers, demographic summaries, and index comparisons. Run it via: `streamlit run dashboard/app.py`.
 *   **B3 — Monte Carlo Projections ([monte_carlo.py](file:///c:/Users/Dell/Desktop/Internship_coding/scripts/monte_carlo.py))**: Projects daily log-normal price returns over a 5-year horizon (1,260 trading days) for the top 5 Sharpe ratio funds over 1,000 runs, showing the 5th, 50th, and 95th percentiles. Saves chart to `reports/advanced_monte_carlo.png`.
 *   **B4 — Markowitz Efficient Frontier ([portfolio_optimization.py](file:///c:/Users/Dell/Desktop/Internship_coding/scripts/portfolio_optimization.py))**: Implements Modern Portfolio Theory (MPT) mean-variance optimization for the top 5 Sharpe funds, simulating 5,000 random portfolios to trace the Efficient Frontier and locate Maximum Sharpe and Minimum Volatility portfolio weights. Saves chart to `reports/advanced_portfolio_optimization.png`.
 *   **B5 — Weekly HTML Email Digest ([email_report.py](file:///c:/Users/Dell/Desktop/Internship_coding/scripts/email_report.py))**: Builds a professional fintech HTML email digest containing summary statistics, KPIs, and performance rankings. Saves HTML output to `reports/weekly_summary.html`.
