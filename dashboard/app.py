@@ -204,7 +204,7 @@ elif page == "Fund Performance":
     # Map raw data categories for plan and category joining
     df_merged = df_scorecard.merge(df_perf_raw[["amfi_code", "std_dev_ann_pct", "aum_crore", "plan"]], on="amfi_code", how="left")
     
-    available_categories = sorted(df_merged["sub_category"].dropna().unique())
+    available_categories = sorted(df_merged["category"].dropna().unique())
     selected_categories = st.sidebar.multiselect("Select Category", available_categories, default=available_categories)
     
     available_plans = sorted(df_merged["plan"].dropna().unique())
@@ -212,7 +212,7 @@ elif page == "Fund Performance":
     # Filtered dataframe
     df_filtered = df_merged[
         df_merged["fund_house"].isin(selected_houses) &
-        df_merged["sub_category"].isin(selected_categories) &
+        df_merged["category"].isin(selected_categories) &
         df_merged["plan"].isin(selected_plans)
     ]
     col_left, col_right = st.columns([3, 2])
@@ -224,7 +224,7 @@ elif page == "Fund Performance":
                 x="std_dev_ann_pct",
                 y="cagr_3yr_pct",
                 size="aum_crore",
-                color="sub_category",
+                color="category",
                 hover_name="scheme_name",
                 hover_data=["sharpe_ratio", "alpha", "max_drawdown_pct"],
                 title="Risk (Standard Deviation) vs. Return (3Yr CAGR)",
@@ -286,7 +286,7 @@ elif page == "Fund Performance":
     st.markdown("<br>", unsafe_allow_html=True)
     st.subheader("Sortable Fund Scorecard")
     st.dataframe(
-        df_filtered[["scorecard_rank", "scheme_name", "fund_house", "sub_category", "cagr_3yr_pct", "sharpe_ratio", "alpha", "expense_ratio_pct", "max_drawdown_pct", "composite_score"]],
+        df_filtered[["scorecard_rank", "scheme_name", "fund_house", "category", "cagr_3yr_pct", "sharpe_ratio", "alpha", "expense_ratio_pct", "max_drawdown_pct", "composite_score"]],
         use_container_width=True,
         hide_index=True
     )
